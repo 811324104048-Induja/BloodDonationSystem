@@ -20,3 +20,9 @@ requiring blood and prioritizes emergency requests.
 - AI-assisted donor ranking
 - Secure authentication
 - Role-based access control
+
+- ## System Architecture
+
+![Blood Donation System Architecture](docs/diagrams/BloodDonationArchitecture.png)
+
+[Editable Draw.io Source](docs/diagrams/BloodDonationArchitecture.drawio)
