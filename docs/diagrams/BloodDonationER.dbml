@@ -1,0 +1,115 @@
+Table users {
+  user_id int [pk, increment]
+  full_name varchar(100) [not null]
+  email varchar(150) [unique, not null]
+  password_hash varchar(255) [not null]
+  role varchar(20) [not null]
+  phone varchar(20)
+  account_status varchar(20) [not null]
+  created_at datetime
+}
+
+Table donors {
+  donor_id int [pk, increment]
+  user_id int [not null, unique]
+  blood_group varchar(5) [not null]
+  date_of_birth date
+  gender varchar(20)
+  city varchar(100) [not null]
+  latitude decimal(10,7)
+  longitude decimal(10,7)
+  available boolean [not null]
+  last_donation_date date
+  verified boolean [not null]
+}
+
+Table patients {
+  patient_id int [pk, increment]
+  user_id int [not null, unique]
+  blood_group varchar(5) [not null]
+  hospital_id int [not null]
+}
+
+Table hospitals {
+  hospital_id int [pk, increment]
+  hospital_name varchar(150) [not null]
+  address varchar(255) [not null]
+  city varchar(100) [not null]
+  latitude decimal(10,7)
+  longitude decimal(10,7)
+  phone varchar(20)
+  verified boolean [not null]
+}
+
+Table blood_requests {
+  request_id int [pk, increment]
+  patient_id int [not null]
+  hospital_id int [not null]
+  blood_group varchar(5) [not null]
+  units_required int [not null]
+  urgency varchar(20) [not null]
+  required_date date
+  status varchar(20) [not null]
+  created_at datetime
+}
+
+Table matches {
+  match_id int [pk, increment]
+  request_id int [not null]
+  donor_id int [not null]
+  match_score decimal(5,2) [not null]
+  distance_km decimal(8,2)
+  compatibility_status varchar(20) [not null]
+  response_status varchar(20) [not null]
+  matched_at datetime
+}
+
+Table donations {
+  donation_id int [pk, increment]
+  donor_id int [not null]
+  request_id int [not null]
+  hospital_id int [not null]
+  donation_date date
+  units_donated int [not null]
+  status varchar(20) [not null]
+}
+
+Table notifications {
+  notification_id int [pk, increment]
+  user_id int [not null]
+  request_id int
+  message varchar(500) [not null]
+  notification_type varchar(30)
+  is_read boolean [not null]
+  created_at datetime
+}
+
+Table audit_logs {
+  audit_id int [pk, increment]
+  user_id int [not null]
+  action varchar(100) [not null]
+  entity_type varchar(50)
+  entity_id int
+  action_time datetime
+  ip_address varchar(45)
+}
+
+Ref: users.user_id - donors.user_id
+Ref: users.user_id - patients.user_id
+
+Ref: hospitals.hospital_id < patients.hospital_id
+
+Ref: patients.patient_id < blood_requests.patient_id
+Ref: hospitals.hospital_id < blood_requests.hospital_id
+
+Ref: blood_requests.request_id < matches.request_id
+Ref: donors.donor_id < matches.donor_id
+
+Ref: donors.donor_id < donations.donor_id
+Ref: blood_requests.request_id - donations.request_id
+Ref: hospitals.hospital_id < donations.hospital_id
+
+Ref: users.user_id < notifications.user_id
+Ref: blood_requests.request_id < notifications.request_id
+
+Ref: users.user_id < audit_logs.user_id
