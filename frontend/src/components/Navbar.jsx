@@ -10,13 +10,34 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const toggleSidebar = () => {
+    window.dispatchEvent(new Event("toggle-sidebar"));
+  };
+
   return (
     <nav className="navbar">
-      <div className="logo" onClick={() => navigate("/")}>
-        🩸 BloodConnect
+
+      <div className="nav-left">
+
+        <button
+          className="menu-btn"
+          onClick={toggleSidebar}
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
+
+        <div
+          className="logo"
+          onClick={() => navigate("/")}
+        >
+          🩸 BloodConnect
+        </div>
+
       </div>
 
       <div className="nav-right">
+
         {user && (
           <>
             <span className="user-name">
@@ -31,7 +52,9 @@ const Navbar = () => {
             </button>
           </>
         )}
+
       </div>
+
     </nav>
   );
 };

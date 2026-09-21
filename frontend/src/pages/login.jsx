@@ -19,21 +19,67 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // Login through AuthContext
       const data = await login(email, password);
 
-      if (data.user.role === "donor") {
-        navigate("/donor/dashboard");
-      } else if (data.user.role === "patient") {
-        navigate("/patient/dashboard");
-      } else if (data.user.role === "admin") {
-        navigate("/admin/dashboard");
+      // Debug: check complete response
+      console.log("Login response:", data);
+
+      // Check whether backend returned valid data
+      if (!data || !data.user) {
+        throw new Error(
+          "Invalid login response from server."
+        );
       }
 
-    } catch (error) {
+      // Get user role
+      const userRole = String(data.user.role)
+        .replace("ROLE_", "")
+        .toLowerCase();
+
+      console.log("User role:", userRole);
+
+      // Navigate according to role
+      if (userRole === "donor") {
+        navigate("/donor/dashboard", {
+          replace: true,
+        });
+      } 
+      
+      else if (userRole === "patient") {
+        navigate("/patient/dashboard", {
+          replace: true,
+        });
+      } 
+      
+      else if (userRole === "admin") {
+        navigate("/admin/dashboard", {
+          replace: true,
+        });
+      } 
+      
+      else {
+        setError(
+          `Unrecognized user role: ${data.user.role}`
+        );
+      }
+
+    } catch (err) {
+
+      // Debug exact error
+      console.error("Full Login Error:", err);
+
+      const backendMessage =
+        err.response?.data?.message ||
+        err.response?.data ||
+        err.message;
+
       setError(
-        error.response?.data?.message ||
-        "Invalid email or password"
+        typeof backendMessage === "string"
+          ? backendMessage
+          : "Invalid email or password"
       );
+
     } finally {
       setLoading(false);
     }
@@ -58,15 +104,21 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
 
+          {/* Email */}
+
           <label>Email</label>
 
           <input
             type="email"
             placeholder="Enter email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             required
           />
+
+          {/* Password */}
 
           <label>Password</label>
 
@@ -74,22 +126,29 @@ const Login = () => {
             type="password"
             placeholder="Enter password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
             required
           />
+
+          {/* Login button */}
 
           <button
             type="submit"
             className="primary-btn"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading
+              ? "Logging in..."
+              : "Login"}
           </button>
 
         </form>
 
         <p className="auth-link">
           Don't have an account?{" "}
+
           <Link to="/signup">
             Create Account
           </Link>

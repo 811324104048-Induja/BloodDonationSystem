@@ -1,0 +1,125 @@
+.patient-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.patient-profile-header h1 {
+    margin: 0;
+    font-size: 30px;
+    color: #111827;
+}
+
+.patient-profile-header p {
+    margin-top: 8px;
+    color: #6b7280;
+}
+
+.patient-edit-btn {
+    border: none;
+    background: #b91c1c;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.patient-edit-btn:hover {
+    background: #991b1b;
+}
+
+.patient-profile-card {
+    max-width: 850px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.patient-profile-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.patient-profile-avatar {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #b91c1c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.patient-profile-top h2 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+.patient-role {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.patient-profile-info {
+    margin-top: 5px;
+}
+
+.patient-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 5px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.patient-info-row strong {
+    color: #374151;
+}
+
+.patient-info-row span {
+    color: #6b7280;
+    text-align: right;
+}
+
+@media (max-width: 650px) {
+
+    .patient-profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .patient-edit-btn {
+        width: 100%;
+    }
+
+    .patient-profile-card {
+        padding: 20px;
+    }
+
+    .patient-info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .patient-info-row span {
+        text-align: left;
+    }
+}

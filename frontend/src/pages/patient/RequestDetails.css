@@ -1,0 +1,199 @@
+/* ========================================
+   REQUEST DETAILS
+======================================== */
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f7fb;
+}
+
+/* ========================================
+   MAIN CONTENT
+======================================== */
+
+.main-content {
+  flex: 1;
+  padding: 40px 45px;
+  margin-left: 250px;
+  box-sizing: border-box;
+}
+
+.main-content > h1 {
+  max-width: 1100px;
+  margin: 0 auto 28px;
+  color: #111827;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* ========================================
+   DETAILS CARD
+======================================== */
+
+.details-card {
+  max-width: 1100px;
+  margin: 0 auto 30px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.details-card h2 {
+  margin: 0 0 22px;
+  color: #b91c1c;
+  font-size: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.details-card p {
+  margin: 13px 0;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.details-card strong {
+  color: #1f2937;
+}
+
+/* ========================================
+   MATCHED DONORS SECTION
+======================================== */
+
+.dashboard-section {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dashboard-section > h2 {
+  margin: 0 0 18px;
+  color: #1f2937;
+  font-size: 22px;
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+
+.dashboard-section .empty-state {
+  max-width: none;
+  margin: 0;
+  padding: 35px 20px;
+  background: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+  color: #6b7280;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ========================================
+   MATCHED DONOR GRID
+======================================== */
+
+.request-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ========================================
+   DONOR CARD
+======================================== */
+
+.request-grid .request-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  transition: 0.2s ease;
+}
+
+.request-grid .request-card:hover {
+  transform: translateY(-3px);
+  border-color: #fecaca;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.07);
+}
+
+.request-grid .request-card h3 {
+  margin: 0 0 18px;
+  color: #111827;
+  font-size: 17px;
+}
+
+.request-grid .request-card p {
+  margin: 10px 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.request-grid .request-card strong {
+  color: #b91c1c;
+}
+
+/* ========================================
+   LOADING
+======================================== */
+
+.loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fb;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* ========================================
+   RESPONSIVE - TABLET
+======================================== */
+
+@media (max-width: 1000px) {
+
+  .main-content {
+    margin-left: 220px;
+    padding: 30px;
+  }
+
+  .request-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+======================================== */
+
+@media (max-width: 700px) {
+
+  .layout {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 25px 18px;
+  }
+
+  .main-content > h1 {
+    font-size: 24px;
+  }
+
+  .details-card {
+    padding: 20px;
+  }
+
+  .details-card h2 {
+    font-size: 21px;
+  }
+
+  .request-grid {
+    grid-template-columns: 1fr;
+  }
+}

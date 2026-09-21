@@ -1,53 +1,75 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import requestService from "../../services/requestService";
+import "./CreateRequest.css";
 
 const CreateRequest = () => {
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    blood_group: "",
-    units_required: 1,
-    hospital_name: "",
+    bloodGroup: "",
+    unitsRequired: 1,
+    hospitalName: "",
     city: "",
     address: "",
-    urgency: "Normal",
-    required_date: "",
-    reason: "",
+    urgency: "NORMAL",
+    requiredDate: "",
+    description: ""
   });
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
+
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     setLoading(true);
+    setError("");
 
     try {
-      await requestService.createRequest(form);
+
+      // JWT token is automatically added by api.js
+      // No user ID or patient ID is required
+      await api.post(
+        "/blood-requests",
+        form
+      );
 
       alert(
-        "Blood request created. Matching donors now..."
+        "Blood request created successfully!"
       );
 
       navigate("/patient/requests");
 
-    } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        "Unable to create request"
+    } catch (err) {
+
+      console.error(
+        "Create blood request error:",
+        err
       );
+
+      setError(
+        err.response?.data?.message ||
+        "Failed to create blood request."
+      );
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
@@ -61,123 +83,207 @@ const CreateRequest = () => {
 
         <main className="main-content">
 
-          <h1>Create Blood Request</h1>
+          <div className="request-page-header">
 
-          <form
-            className="form-card"
-            onSubmit={handleSubmit}
-          >
+            <div>
 
-            <label>Blood Group</label>
+              <h1>
+                🩸 Create Blood Request
+              </h1>
 
-            <select
-              name="blood_group"
-              value={form.blood_group}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select Blood Group
-              </option>
+              <p>
+                Provide the required details to find
+                suitable blood donors.
+              </p>
 
-              <option>A+</option>
-              <option>A-</option>
-              <option>B+</option>
-              <option>B-</option>
-              <option>AB+</option>
-              <option>AB-</option>
-              <option>O+</option>
-              <option>O-</option>
-            </select>
+            </div>
 
-            <label>Units Required</label>
+          </div>
 
-            <input
-              type="number"
-              name="units_required"
-              min="1"
-              max="10"
-              value={form.units_required}
-              onChange={handleChange}
-              required
-            />
+          <div className="request-form-card">
 
-            <label>Hospital Name</label>
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
+            )}
 
-            <input
-              name="hospital_name"
-              value={form.hospital_name}
-              onChange={handleChange}
-              required
-            />
+            <form onSubmit={handleSubmit}>
 
-            <label>City</label>
+              <label>
+                Blood Group
+              </label>
 
-            <input
-              name="city"
-              value={form.city}
-              onChange={handleChange}
-              required
-            />
+              <select
+                name="bloodGroup"
+                value={form.bloodGroup}
+                onChange={handleChange}
+                required
+              >
 
-            <label>Hospital Address</label>
+                <option value="">
+                  Select blood group
+                </option>
 
-            <textarea
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              required
-            />
+                <option value="A+">
+                  A+
+                </option>
 
-            <label>Urgency</label>
+                <option value="A-">
+                  A-
+                </option>
 
-            <select
-              name="urgency"
-              value={form.urgency}
-              onChange={handleChange}
-            >
-              <option value="Normal">
-                Normal
-              </option>
+                <option value="B+">
+                  B+
+                </option>
 
-              <option value="Urgent">
-                Urgent
-              </option>
+                <option value="B-">
+                  B-
+                </option>
 
-              <option value="Critical">
-                Critical
-              </option>
-            </select>
+                <option value="AB+">
+                  AB+
+                </option>
 
-            <label>Required Date</label>
+                <option value="AB-">
+                  AB-
+                </option>
 
-            <input
-              type="date"
-              name="required_date"
-              value={form.required_date}
-              onChange={handleChange}
-              required
-            />
+                <option value="O+">
+                  O+
+                </option>
 
-            <label>Reason</label>
+                <option value="O-">
+                  O-
+                </option>
 
-            <textarea
-              name="reason"
-              placeholder="Briefly describe the requirement"
-              value={form.reason}
-              onChange={handleChange}
-            />
+              </select>
+
+              <label>
+                Units Required
+              </label>
+
+              <input
+                type="number"
+                name="unitsRequired"
+                min="1"
+                max="10"
+                value={form.unitsRequired}
+                onChange={handleChange}
+                required
+              />
+
+              <label>
+                Hospital Name
+              </label>
+
+              <input
+                type="text"
+                name="hospitalName"
+                placeholder="Enter hospital name"
+                value={form.hospitalName}
+                onChange={handleChange}
+                required
+              />
+
+              <label>
+                City
+              </label>
+
+              <input
+                type="text"
+                name="city"
+                placeholder="Enter city"
+                value={form.city}
+                onChange={handleChange}
+                required
+              />
+
+              <label>
+                Address
+              </label>
+
+              <input
+                type="text"
+                name="address"
+                placeholder="Hospital address"
+                value={form.address}
+                onChange={handleChange}
+              />
+
+              <label>
+                Urgency
+              </label>
+
+              <select
+                name="urgency"
+                value={form.urgency}
+                onChange={handleChange}
+                required
+              >
+
+                <option value="NORMAL">
+                  Normal
+                </option>
+
+                <option value="URGENT">
+                  Urgent
+                </option>
+
+                <option value="CRITICAL">
+                  Critical
+                </option>
+
+              </select>
+
+              <label>
+                Required Date
+              </label>
+
+              <input
+                type="date"
+                name="requiredDate"
+                value={form.requiredDate}
+                onChange={handleChange}
+                required
+              />
+
+              <label>
+                Description
+              </label>
+
+              <textarea
+                name="description"
+                placeholder="Additional information"
+                value={form.description}
+                onChange={handleChange}
+                rows="4"
+              />
+
+              <button
+                type="submit"
+                className="create-request-btn"
+                disabled={loading}
+              >
+
+                {loading
+                  ? "Creating..."
+                  : "🩸 Create Blood Request"}
+
+              </button>
+
+            </form>
 
             <button
-              className="primary-btn"
-              disabled={loading}
+              className="back-dashboard-btn"
+              onClick={() =>
+                navigate("/patient/dashboard")
+              }
             >
-              {loading
-                ? "Creating..."
-                : "Create Blood Request"}
+              ← Back to Dashboard
             </button>
 
-          </form>
+          </div>
 
         </main>
 

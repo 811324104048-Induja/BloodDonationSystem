@@ -1,48 +1,84 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import requestService from "../../services/requestService";
+import "./MyRequests.css";
 
 const MyRequests = () => {
-  const [requests, setRequests] = useState([]);
 
   const navigate = useNavigate();
 
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    loadRequests();
+
+    const fetchRequests = async () => {
+
+      try {
+
+        const response = await api.get(
+          "/blood-requests/my-requests"
+        );
+
+        setRequests(response.data);
+
+      } catch (error) {
+
+        console.error(
+          "Failed to fetch requests:",
+          error
+        );
+
+        setError(
+          error.response?.data?.message ||
+          "Failed to load blood requests."
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+    };
+
+    fetchRequests();
+
   }, []);
 
-  const loadRequests = async () => {
-    try {
-      const data =
-        await requestService.getMyRequests();
+  /* =========================
+     LOADING
+  ========================= */
 
-      setRequests(
-        data.requests || data || []
-      );
+  if (loading) {
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    return (
+      <>
+        <Navbar />
 
-  const cancelRequest = async (id) => {
-    if (!window.confirm(
-      "Cancel this blood request?"
-    )) {
-      return;
-    }
+        <div className="layout">
 
-    try {
-      await requestService.cancelRequest(id);
+          <Sidebar />
 
-      loadRequests();
+          <main className="main-content">
 
-    } catch (error) {
-      alert("Unable to cancel request");
-    }
-  };
+            <div className="requests-loading">
+              Loading requests...
+            </div>
+
+          </main>
+
+        </div>
+      </>
+    );
+
+  }
+
+  /* =========================
+     MAIN PAGE
+  ========================= */
 
   return (
     <>
@@ -54,12 +90,23 @@ const MyRequests = () => {
 
         <main className="main-content">
 
+          {/* PAGE HEADER */}
+
           <div className="page-header">
 
-            <h1>My Blood Requests</h1>
+            <div>
+
+              <h1>
+                📋 My Blood Requests
+              </h1>
+
+              <p>
+                Track and manage your blood requests.
+              </p>
+
+            </div>
 
             <button
-              className="primary-btn"
               onClick={() =>
                 navigate("/patient/create-request")
               }
@@ -69,99 +116,128 @@ const MyRequests = () => {
 
           </div>
 
-          <div className="table-container">
 
-            <table>
+          {/* =========================
+              ERROR
+          ========================= */}
 
-              <thead>
+          {error && (
 
-                <tr>
-                  <th>Blood</th>
-                  <th>Units</th>
-                  <th>Hospital</th>
-                  <th>Urgency</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
+            <div className="error-message">
+              {error}
+            </div>
 
-              </thead>
+          )}
 
-              <tbody>
 
-                {requests.map((request) => (
+          {/* =========================
+              NO REQUESTS
+          ========================= */}
 
-                  <tr
-                    key={
-                      request.request_id ||
-                      request.id
-                    }
-                  >
+          {!error && requests.length === 0 ? (
 
-                    <td>
-                      {request.blood_group}
-                    </td>
+            <div className="empty-state">
 
-                    <td>
-                      {request.units_required}
-                    </td>
+              <div className="empty-icon">
+                🩸
+              </div>
 
-                    <td>
-                      {request.hospital_name}
-                    </td>
+              <h2>
+                No Blood Requests Yet
+              </h2>
 
-                    <td>
-                      {request.urgency}
-                    </td>
+              <p>
+                You haven't created any blood requests.
+                Create one when you need blood.
+              </p>
 
-                    <td>
+              <button
+                onClick={() =>
+                  navigate("/patient/create-request")
+                }
+              >
+                + Create Blood Request
+              </button>
+
+            </div>
+
+          ) : (
+
+            /* =========================
+               REQUEST LIST
+            ========================= */
+
+            <div className="request-list">
+
+              {requests.map((request) => (
+
+                <div
+                  className="request-card"
+                  key={request.requestId}
+                >
+
+                  {/* LEFT SIDE */}
+
+                  <div>
+
+                    <h3>
+                      🩸 {request.bloodGroup}
+                    </h3>
+
+                    <p>
+                      🏥 {request.hospitalName}
+                    </p>
+
+                    <p>
+                      📍 {request.city}
+                    </p>
+
+                    <p>
+                      🩸 Units Required:{" "}
+                      {request.unitsRequired}
+                    </p>
+
+                  </div>
+
+
+                  {/* RIGHT SIDE */}
+
+                  <div>
+
+                    <span
+                      className={`status ${
+                        request.status
+                          ?.toLowerCase()
+                          .replaceAll(" ", "_")
+                      }`}
+                    >
                       {request.status}
-                    </td>
+                    </span>
 
-                    <td>
+                    <p>
+                      🚨 Urgency:{" "}
+                      {request.urgency}
+                    </p>
 
-                      <button
-                        onClick={() =>
-                          navigate(
-                            `/patient/requests/${
-                              request.request_id ||
-                              request.id
-                            }`
-                          )
-                        }
-                      >
-                        View
-                      </button>
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/patient/requests/${request.requestId}`
+                        )
+                      }
+                    >
+                      View Details →
+                    </button>
 
-                      {request.status !==
-                        "Completed" &&
-                        request.status !==
-                        "Cancelled" && (
+                  </div>
 
-                          <button
-                            className="reject-btn"
-                            onClick={() =>
-                              cancelRequest(
-                                request.request_id ||
-                                request.id
-                              )
-                            }
-                          >
-                            Cancel
-                          </button>
+                </div>
 
-                        )}
+              ))}
 
-                    </td>
+            </div>
 
-                  </tr>
-
-                ))}
-
-              </tbody>
-
-            </table>
-
-          </div>
+          )}
 
         </main>
 

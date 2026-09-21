@@ -19,9 +19,11 @@ import DonationHistory from "./pages/donor/DonationHistory";
 import MatchedRequests from "./pages/donor/MatchedRequests";
 
 import PatientDashboard from "./pages/patient/PatientDashboard";
+import PatientProfile from "./pages/patient/PatientProfile";
 import CreateRequest from "./pages/patient/CreateRequest";
 import MyRequests from "./pages/patient/MyRequests";
 import RequestDetails from "./pages/patient/RequestDetails";
+import EditPatientProfile from "./pages/patient/EditPatientProfile";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUsers from "./pages/admin/ManageUsers";
@@ -120,6 +122,23 @@ function App() {
               </ProtectedRoute>
             }
           />
+      <Route
+  path="/patient/profile"
+  element={
+    <ProtectedRoute allowedRoles={["patient"]}>
+      <PatientProfile />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/patient/profile/edit"
+  element={
+    <ProtectedRoute allowedRoles={["patient"]}>
+      <EditPatientProfile />
+    </ProtectedRoute>
+  }
+/>
 
           <Route
             path="/patient/create-request"
@@ -152,6 +171,10 @@ function App() {
                 <RequestDetails />
               </ProtectedRoute>
             }
+
+
+
+
           />
 
           {/* ADMIN */}

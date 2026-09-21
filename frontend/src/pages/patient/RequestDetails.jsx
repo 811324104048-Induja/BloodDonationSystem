@@ -1,44 +1,204 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
+
 import requestService from "../../services/requestService";
 import matchService from "../../services/matchService";
 
 const RequestDetails = () => {
+
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [request, setRequest] = useState(null);
   const [matches, setMatches] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   useEffect(() => {
+
     loadDetails();
+
   }, [id]);
 
   const loadDetails = async () => {
+
     try {
+
+      setLoading(true);
+      setError("");
+
+      // Get blood request
       const requestData =
         await requestService.getRequestById(id);
 
-      const matchData =
-        await matchService.getMatchesForRequest(id);
+      console.log(
+        "Request details:",
+        requestData
+      );
 
       setRequest(
-        requestData.request || requestData
+        requestData.request ||
+        requestData
       );
 
-      setMatches(
-        matchData.matches || matchData || []
-      );
+
+      // Get matched donors
+      try {
+
+        const matchData =
+          await matchService.getMatchesForRequest(id);
+
+        console.log(
+          "Match details:",
+          matchData
+        );
+
+        setMatches(
+          matchData.matches ||
+          matchData ||
+          []
+        );
+
+      } catch (matchError) {
+
+        console.error(
+          "Failed to load matches:",
+          matchError
+        );
+
+        // Don't prevent request details
+        // from being displayed if matching fails
+        setMatches([]);
+
+      }
 
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        "Failed to load request details:",
+        error
+      );
+
+      setError(
+        error.response?.data?.message ||
+        "Failed to load blood request."
+      );
+
+    } finally {
+
+      setLoading(false);
+
     }
   };
 
-  if (!request) {
-    return <div className="loading">Loading...</div>;
+
+  /* =========================
+     LOADING
+  ========================= */
+
+  if (loading) {
+
+    return (
+      <>
+        <Navbar />
+
+        <div className="layout">
+
+          <Sidebar />
+
+          <main className="main-content">
+
+            <div className="loading">
+              Loading request details...
+            </div>
+
+          </main>
+
+        </div>
+      </>
+    );
   }
+
+
+  /* =========================
+     ERROR
+  ========================= */
+
+  if (error) {
+
+    return (
+      <>
+        <Navbar />
+
+        <div className="layout">
+
+          <Sidebar />
+
+          <main className="main-content">
+
+            <div className="error-message">
+              {error}
+            </div>
+
+            <button
+              onClick={() =>
+                navigate("/patient/requests")
+              }
+            >
+              ← Back to My Requests
+            </button>
+
+          </main>
+
+        </div>
+      </>
+    );
+  }
+
+
+  /* =========================
+     NO REQUEST
+  ========================= */
+
+  if (!request) {
+
+    return (
+      <>
+        <Navbar />
+
+        <div className="layout">
+
+          <Sidebar />
+
+          <main className="main-content">
+
+            <div className="empty-state">
+              Blood request not found.
+            </div>
+
+            <button
+              onClick={() =>
+                navigate("/patient/requests")
+              }
+            >
+              ← Back to My Requests
+            </button>
+
+          </main>
+
+        </div>
+      </>
+    );
+  }
+
+
+  /* =========================
+     MAIN PAGE
+  ========================= */
 
   return (
     <>
@@ -50,45 +210,101 @@ const RequestDetails = () => {
 
         <main className="main-content">
 
-          <h1>Blood Request Details</h1>
+          {/* HEADER */}
+
+          <div className="page-header">
+
+            <div>
+
+              <h1>
+                🩸 Blood Request Details
+              </h1>
+
+              <p>
+                View the details of your blood request.
+              </p>
+
+            </div>
+
+            <button
+              onClick={() =>
+                navigate("/patient/requests")
+              }
+            >
+              ← Back to Requests
+            </button>
+
+          </div>
+
+
+          {/* REQUEST DETAILS */}
 
           <div className="details-card">
 
             <h2>
-              🩸 {request.blood_group}
+              🩸 {request.bloodGroup || "-"}
             </h2>
 
             <p>
-              <strong>Units:</strong>{" "}
-              {request.units_required}
+              <strong>
+                Units Required:
+              </strong>{" "}
+              {request.unitsRequired || "-"}
             </p>
 
             <p>
-              <strong>Hospital:</strong>{" "}
-              {request.hospital_name}
+              <strong>
+                Hospital:
+              </strong>{" "}
+              {request.hospitalName || "-"}
             </p>
 
             <p>
-              <strong>City:</strong>{" "}
-              {request.city}
+              <strong>
+                City:
+              </strong>{" "}
+              {request.city || "-"}
             </p>
 
             <p>
-              <strong>Urgency:</strong>{" "}
-              {request.urgency}
+              <strong>
+                Address:
+              </strong>{" "}
+              {request.address || "-"}
             </p>
 
             <p>
-              <strong>Status:</strong>{" "}
-              {request.status}
+              <strong>
+                Urgency:
+              </strong>{" "}
+              {request.urgency || "-"}
             </p>
 
             <p>
-              <strong>Required Date:</strong>{" "}
-              {request.required_date}
+              <strong>
+                Status:
+              </strong>{" "}
+              {request.status || "-"}
+            </p>
+
+            <p>
+              <strong>
+                Required Date:
+              </strong>{" "}
+              {request.requiredDate || "-"}
+            </p>
+
+            <p>
+              <strong>
+                Description:
+              </strong>{" "}
+              {request.description || "-"}
             </p>
 
           </div>
+
+
+          {/* MATCHED DONORS */}
 
           <div className="dashboard-section">
 
@@ -99,7 +315,9 @@ const RequestDetails = () => {
             {matches.length === 0 ? (
 
               <div className="empty-state">
+
                 Matching donors are being searched...
+
               </div>
 
             ) : (
@@ -111,6 +329,7 @@ const RequestDetails = () => {
                   <div
                     className="request-card"
                     key={
+                      match.matchId ||
                       match.match_id ||
                       match.id
                     }
@@ -123,13 +342,18 @@ const RequestDetails = () => {
                     <p>
                       Match Score:{" "}
                       <strong>
-                        {match.match_score}
+                        {match.matchScore ||
+                          match.match_score ||
+                          "-"}
                       </strong>
                     </p>
 
                     <p>
                       Distance:{" "}
-                      {match.distance_km || "-"} km
+                      {match.distanceKm ||
+                        match.distance_km ||
+                        "-"}{" "}
+                      km
                     </p>
 
                     <p>
@@ -141,7 +365,7 @@ const RequestDetails = () => {
 
                     <p>
                       Status:{" "}
-                      {match.status}
+                      {match.status || "-"}
                     </p>
 
                   </div>

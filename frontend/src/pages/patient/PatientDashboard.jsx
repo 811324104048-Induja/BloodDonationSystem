@@ -1,37 +1,14 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import "./PatientDashboard.css";
+
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import requestService from "../../services/requestService";
 
 const PatientDashboard = () => {
+
+  const { user } = useAuth();
   const navigate = useNavigate();
-
-  const [requests, setRequests] = useState([]);
-
-  useEffect(() => {
-    loadRequests();
-  }, []);
-
-  const loadRequests = async () => {
-    try {
-      const data =
-        await requestService.getMyRequests();
-
-      setRequests(
-        data.requests || data || []
-      );
-
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const activeRequests = requests.filter(
-    (r) =>
-      r.status !== "Completed" &&
-      r.status !== "Cancelled"
-  );
 
   return (
     <>
@@ -43,121 +20,199 @@ const PatientDashboard = () => {
 
         <main className="main-content">
 
-          <div className="page-header">
+          {/* HEADER */}
+
+          <header className="dashboard-header">
 
             <div>
-              <h1>Patient Dashboard</h1>
+              <h1>
+                Welcome, {user?.name || "Patient"} 👋
+              </h1>
 
               <p>
-                Request blood and find suitable donors.
+                Manage your blood requests and find
+                suitable donors.
               </p>
             </div>
 
             <button
-              className="primary-btn"
+              className="profile-button"
               onClick={() =>
-                navigate("/patient/create-request")
+                navigate("/patient/profile")
               }
             >
-              + Request Blood
+              👤 Profile
             </button>
 
-          </div>
+          </header>
 
-          <div className="stats-grid">
+
+          {/* STAT CARDS */}
+
+          <section className="stats">
 
             <div className="stat-card">
-              <h3>Total Requests</h3>
+
+              <span>🩸</span>
+
+              <h3>
+                Active Requests
+              </h3>
+
               <strong>
-                {requests.length}
+                0
               </strong>
+
             </div>
 
-            <div className="stat-card">
-              <h3>Active Requests</h3>
-              <strong>
-                {activeRequests.length}
-              </strong>
-            </div>
 
             <div className="stat-card">
-              <h3>Completed</h3>
+
+              <span>👥</span>
+
+              <h3>
+                Matched Donors
+              </h3>
+
               <strong>
-                {
-                  requests.filter(
-                    (r) => r.status === "Completed"
-                  ).length
+                0
+              </strong>
+
+            </div>
+
+
+            <div className="stat-card">
+
+              <span>🚨</span>
+
+              <h3>
+                Emergency Requests
+              </h3>
+
+              <strong>
+                0
+              </strong>
+
+            </div>
+
+          </section>
+
+
+          {/* QUICK ACTIONS */}
+
+          <section>
+
+            <h2>
+              Quick Actions
+            </h2>
+
+            <div className="actions">
+
+              <button
+                onClick={() =>
+                  navigate("/patient/create-request")
                 }
-              </strong>
+              >
+
+                <span>🩸</span>
+
+                <strong>
+                  Create Blood Request
+                </strong>
+
+                <small>
+                  Request blood from nearby donors
+                </small>
+
+              </button>
+
+
+              <button
+                onClick={() =>
+                  navigate("/patient/requests")
+                }
+              >
+
+                <span>📋</span>
+
+                <strong>
+                  View My Requests
+                </strong>
+
+                <small>
+                  Track your existing requests
+                </small>
+
+              </button>
+
+
+              <button
+                onClick={() =>
+                  navigate("/patient/profile")
+                }
+              >
+
+                <span>👤</span>
+
+                <strong>
+                  My Profile
+                </strong>
+
+                <small>
+                  View and update your information
+                </small>
+
+              </button>
+
             </div>
 
-          </div>
+          </section>
 
-          <div className="dashboard-section">
 
-            <h2>Recent Requests</h2>
+          {/* INFORMATION */}
 
-            {requests.length === 0 ? (
+          <section className="info-card">
 
-              <div className="empty-state">
-                You haven't created any blood requests.
+            <h2>
+              How BloodConnect Works
+            </h2>
+
+            <div className="steps">
+
+              <div>
+                <b>1</b>
+                <p>
+                  Create a blood request
+                </p>
               </div>
 
-            ) : (
 
-              <div className="request-grid">
-
-                {requests.slice(0, 4).map((request) => (
-
-                  <div
-                    className="request-card"
-                    key={
-                      request.request_id ||
-                      request.id
-                    }
-                  >
-
-                    <h3>
-                      🩸 {request.blood_group}
-                    </h3>
-
-                    <p>
-                      {request.units_required} units
-                    </p>
-
-                    <p>
-                      📍 {request.city}
-                    </p>
-
-                    <p>
-                      Status:{" "}
-                      <strong>
-                        {request.status}
-                      </strong>
-                    </p>
-
-                    <button
-                      onClick={() =>
-                        navigate(
-                          `/patient/requests/${
-                            request.request_id ||
-                            request.id
-                          }`
-                        )
-                      }
-                    >
-                      View Details
-                    </button>
-
-                  </div>
-
-                ))}
-
+              <div>
+                <b>2</b>
+                <p>
+                  Our system finds suitable donors
+                </p>
               </div>
 
-            )}
 
-          </div>
+              <div>
+                <b>3</b>
+                <p>
+                  Contact matched donors
+                </p>
+              </div>
+
+
+              <div>
+                <b>4</b>
+                <p>
+                  Receive the required blood
+                </p>
+              </div>
+
+            </div>
+
+          </section>
 
         </main>
 

@@ -11,7 +11,13 @@ const Signup = () => {
     email: "",
     password: "",
     phone: "",
-    role: "donor",
+    role: "DONOR",
+    age: "",
+    gender: "",
+    bloodGroup: "",
+    city: "",
+    address: "",
+    hospitalName: "",
   });
 
   const [error, setError] = useState("");
@@ -31,7 +37,28 @@ const Signup = () => {
     setSuccess("");
 
     try {
-      await signup(form);
+      // Build payload - convert age to number, only send relevant fields
+      const payload = {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        phone: form.phone,
+        role: form.role,
+        city: form.city,
+        address: form.address,
+      };
+
+      if (form.role === "DONOR") {
+        payload.age = form.age ? parseInt(form.age, 10) : null;
+        payload.gender = form.gender;
+        payload.bloodGroup = form.bloodGroup;
+      }
+
+      if (form.role === "PATIENT") {
+        payload.hospitalName = form.hospitalName;
+      }
+
+      await signup(payload);
 
       setSuccess(
         "Account created successfully. Please login."
@@ -122,14 +149,91 @@ const Signup = () => {
             value={form.role}
             onChange={handleChange}
           >
-            <option value="donor">
-              Blood Donor
-            </option>
-
-            <option value="patient">
-              Patient
-            </option>
+            <option value="DONOR">Donor</option>
+            <option value="PATIENT">Patient</option>
           </select>
+
+          <label>City</label>
+
+          <input
+            name="city"
+            placeholder="Enter your city"
+            value={form.city}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Address</label>
+
+          <input
+            name="address"
+            placeholder="Enter your address"
+            value={form.address}
+            onChange={handleChange}
+          />
+
+          {form.role === "DONOR" && (
+            <>
+              <label>Age</label>
+
+              <input
+                type="number"
+                name="age"
+                placeholder="Enter your age"
+                value={form.age}
+                onChange={handleChange}
+                required
+                min="18"
+                max="65"
+              />
+
+              <label>Gender</label>
+
+              <select
+                name="gender"
+                value={form.gender}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select gender</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+              </select>
+
+              <label>Blood Group</label>
+
+              <select
+                name="bloodGroup"
+                value={form.bloodGroup}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select blood group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </>
+          )}
+
+          {form.role === "PATIENT" && (
+            <>
+              <label>Hospital Name</label>
+
+              <input
+                name="hospitalName"
+                placeholder="Enter hospital name (optional)"
+                value={form.hospitalName}
+                onChange={handleChange}
+              />
+            </>
+          )}
 
           <button className="primary-btn">
             Create Account

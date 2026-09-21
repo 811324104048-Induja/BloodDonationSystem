@@ -1,0 +1,129 @@
+.request-page-header {
+    margin-bottom: 25px;
+}
+
+.request-page-header h1 {
+    margin: 0;
+    font-size: 30px;
+    color: #111827;
+}
+
+.request-page-header p {
+    margin-top: 8px;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+.request-form-card {
+    max-width: 850px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.request-form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.request-form-card label {
+    font-weight: 600;
+    color: #374151;
+    margin-top: 10px;
+}
+
+.request-form-card input,
+.request-form-card select,
+.request-form-card textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: #ffffff;
+    transition: 0.2s;
+}
+
+.request-form-card input:focus,
+.request-form-card select:focus,
+.request-form-card textarea:focus {
+    outline: none;
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+}
+
+.request-form-card textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.create-request-btn {
+    margin-top: 22px;
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #b91c1c;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.create-request-btn:hover {
+    background: #991b1b;
+    transform: translateY(-1px);
+}
+
+.create-request-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.back-dashboard-btn {
+    margin-top: 18px;
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.back-dashboard-btn:hover {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+@media (max-width: 650px) {
+
+    .request-form-card {
+        padding: 20px;
+    }
+
+    .request-page-header h1 {
+        font-size: 24px;
+    }
+
+}

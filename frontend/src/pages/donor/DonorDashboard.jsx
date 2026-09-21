@@ -1,193 +1,175 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import donorService from "../../services/donorService";
+import "./DonorDashboard.css";
 
 const DonorDashboard = () => {
+
+  const { user } = useAuth();
   const navigate = useNavigate();
-
-  const [profile, setProfile] = useState(null);
-  const [matches, setMatches] = useState([]);
-  const [available, setAvailable] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadDashboard();
-  }, []);
-
-  const loadDashboard = async () => {
-    try {
-      const profileData =
-        await donorService.getProfile();
-
-      const matchData =
-        await donorService.getMatchedRequests();
-
-      setProfile(profileData.donor || profileData);
-      setAvailable(
-        profileData.donor?.available ||
-        profileData.available ||
-        false
-      );
-
-      setMatches(
-        matchData.matches ||
-        matchData ||
-        []
-      );
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const toggleAvailability = async () => {
-    try {
-      await donorService.updateAvailability(
-        !available
-      );
-
-      setAvailable(!available);
-
-    } catch (error) {
-      alert("Unable to update availability");
-    }
-  };
-
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
 
   return (
     <>
+      {/* Common Navbar */}
       <Navbar />
 
+      {/* Main Layout */}
       <div className="layout">
 
+        {/* Common Sidebar */}
         <Sidebar />
 
+        {/* Dashboard Content */}
         <main className="main-content">
 
-          <div className="page-header">
+          {/* Dashboard Header */}
+          <header className="dashboard-header">
+
             <div>
-              <h1>Donor Dashboard</h1>
+              <h1>
+                Welcome, {user?.name || "Donor"} ❤️
+              </h1>
+
               <p>
-                Help save lives by donating blood.
+                Your donation can save someone's life.
               </p>
             </div>
 
             <button
-              className={
-                available
-                  ? "available-btn"
-                  : "unavailable-btn"
+              className="profile-button"
+              onClick={() =>
+                navigate("/donor/profile")
               }
-              onClick={toggleAvailability}
             >
-              {available
-                ? "🟢 Available"
-                : "🔴 Not Available"}
+              👤 Profile
             </button>
-          </div>
 
-          <div className="stats-grid">
+          </header>
+
+
+          {/* Statistics */}
+          <section className="stats">
 
             <div className="stat-card">
+              <span>🩸</span>
+
               <h3>Blood Group</h3>
-              <strong>
-                {profile?.blood_group || "Not set"}
-              </strong>
+
+              <strong>--</strong>
             </div>
 
-            <div className="stat-card">
-              <h3>Location</h3>
-              <strong>
-                {profile?.city || "Not set"}
-              </strong>
-            </div>
 
             <div className="stat-card">
+              <span>🚨</span>
+
               <h3>Matched Requests</h3>
-              <strong>
-                {matches.length}
-              </strong>
+
+              <strong>0</strong>
             </div>
+
 
             <div className="stat-card">
-              <h3>Status</h3>
-              <strong>
-                {available
-                  ? "Available"
-                  : "Unavailable"}
-              </strong>
+              <span>❤️</span>
+
+              <h3>Donations</h3>
+
+              <strong>0</strong>
             </div>
 
-          </div>
 
-          <div className="dashboard-section">
+            <div className="stat-card">
+              <span>🟢</span>
 
-            <div className="section-header">
-              <h2>Urgent Blood Requests</h2>
+              <h3>Availability</h3>
+
+              <strong>Available</strong>
+            </div>
+
+          </section>
+
+
+          {/* Quick Actions */}
+          <section>
+
+            <h2>Quick Actions</h2>
+
+            <div className="actions">
+
+              <button
+                onClick={() =>
+                  navigate("/donor/profile")
+                }
+              >
+                <span>👤</span>
+
+                <strong>My Profile</strong>
+
+                <small>
+                  View and update your donor information
+                </small>
+              </button>
+
 
               <button
                 onClick={() =>
                   navigate("/donor/matches")
                 }
               >
-                View All
+                <span>🚨</span>
+
+                <strong>Emergency Requests</strong>
+
+                <small>
+                  Find blood requests that match you
+                </small>
               </button>
+
+
+              <button
+                onClick={() =>
+                  navigate("/donor/history")
+                }
+              >
+                <span>📋</span>
+
+                <strong>Donation History</strong>
+
+                <small>
+                  View your previous donations
+                </small>
+              </button>
+
             </div>
 
-            {matches.length === 0 ? (
-              <div className="empty-state">
-                No matching requests currently.
+          </section>
+
+
+          {/* Why Donate */}
+          <section className="info-card">
+
+            <h2>Why Donate Blood?</h2>
+
+            <div className="steps">
+
+              <div>
+                <b>❤️</b>
+                <p>Save lives</p>
               </div>
-            ) : (
-              <div className="request-grid">
 
-                {matches.slice(0, 3).map((match) => (
-
-                  <div
-                    className="request-card"
-                    key={match.match_id || match.id}
-                  >
-
-                    <span
-                      className={`urgency ${
-                        match.urgency?.toLowerCase()
-                      }`}
-                    >
-                      {match.urgency || "Normal"}
-                    </span>
-
-                    <h3>
-                      {match.blood_group}
-                    </h3>
-
-                    <p>
-                      📍 {match.city}
-                    </p>
-
-                    <p>
-                      🩸 {match.units_required} units
-                    </p>
-
-                    <p>
-                      🎯 Score:{" "}
-                      {match.match_score || "-"}
-                    </p>
-
-                  </div>
-
-                ))}
-
+              <div>
+                <b>🩸</b>
+                <p>Help emergency patients</p>
               </div>
-            )}
 
-          </div>
+              <div>
+                <b>🤝</b>
+                <p>Support your community</p>
+              </div>
+
+            </div>
+
+          </section>
 
         </main>
 

@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import donorService from "../../services/donorService";
+import "./DonorProfile.css";
 
 const DonorProfile = () => {
   const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,15 +17,35 @@ const DonorProfile = () => {
   }, []);
 
   const loadProfile = async () => {
-    try {
-      const data = await donorService.getProfile();
+  try {
+    console.log("Loading donor profile...");
 
-      setProfile(data.donor || data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const data = await donorService.getProfile();
 
+    console.log("Profile response:", data);
+
+    setProfile(data?.donor || data);
+  } catch (error) {
+    console.error("Failed to load donor profile:", error);
+    console.error("Status:", error?.response?.status);
+    console.error("Response:", error?.response?.data);
+
+    setError(
+      error?.response?.data?.message ||
+      "Unable to load donor profile"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+if (loading) {
+  return <div className="loading">Loading...</div>;
+}
+
+if (error) {
+  return <div className="error">{error}</div>;
+}
   if (!profile) {
     return <div className="loading">Loading...</div>;
   }
@@ -31,7 +55,6 @@ const DonorProfile = () => {
       <Navbar />
 
       <div className="layout">
-
         <Sidebar />
 
         <main className="main-content">
@@ -41,9 +64,7 @@ const DonorProfile = () => {
 
             <button
               className="primary-btn small"
-              onClick={() =>
-                navigate("/donor/profile/edit")
-              }
+              onClick={() => navigate("/donor/profile/edit")}
             >
               Edit Profile
             </button>
@@ -52,46 +73,46 @@ const DonorProfile = () => {
           <div className="profile-card">
 
             <div className="profile-avatar">
-              {profile.name?.charAt(0)}
+              {profile.user?.name?.charAt(0)?.toUpperCase() || "D"}
             </div>
 
-            <h2>{profile.name}</h2>
+            <h2>{profile.user?.name || "Donor"}</h2>
 
             <div className="profile-info">
 
               <p>
                 <strong>Email:</strong>{" "}
-                {profile.email}
+                {profile.user?.email || "-"}
               </p>
 
               <p>
                 <strong>Phone:</strong>{" "}
-                {profile.phone}
+                {profile.user?.phone || "-"}
               </p>
 
               <p>
                 <strong>Blood Group:</strong>{" "}
-                {profile.blood_group}
+                {profile.bloodGroup || "-"}
               </p>
 
               <p>
                 <strong>Age:</strong>{" "}
-                {profile.age}
+                {profile.age || "-"}
               </p>
 
               <p>
                 <strong>Gender:</strong>{" "}
-                {profile.gender}
+                {profile.gender || "-"}
               </p>
 
               <p>
                 <strong>City:</strong>{" "}
-                {profile.city}
+                {profile.city || "-"}
               </p>
 
               <p>
                 <strong>Address:</strong>{" "}
-                {profile.address}
+                {profile.address || "-"}
               </p>
 
               <p>
@@ -103,8 +124,7 @@ const DonorProfile = () => {
 
               <p>
                 <strong>Last Donation:</strong>{" "}
-                {profile.last_donation_date ||
-                  "Not recorded"}
+                {profile.lastDonationDate || "Not recorded"}
               </p>
 
             </div>
@@ -112,7 +132,6 @@ const DonorProfile = () => {
           </div>
 
         </main>
-
       </div>
     </>
   );

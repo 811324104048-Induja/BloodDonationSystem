@@ -5,6 +5,7 @@ import donorService from "../../services/donorService";
 
 const DonationHistory = () => {
   const [donations, setDonations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadHistory();
@@ -12,15 +13,18 @@ const DonationHistory = () => {
 
   const loadHistory = async () => {
     try {
-      const data =
-        await donorService.getDonationHistory();
+      const data = await donorService.getDonationHistory();
 
       setDonations(
-        data.donations || data || []
+        Array.isArray(data)
+          ? data
+          : data.donations || []
       );
-
     } catch (error) {
-      console.error(error);
+      console.error("Failed to load donation history:", error);
+      setDonations([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,78 +33,57 @@ const DonationHistory = () => {
       <Navbar />
 
       <div className="layout">
-
         <Sidebar />
 
         <main className="main-content">
 
           <h1>Donation History</h1>
 
-          {donations.length === 0 ? (
+          {loading ? (
+            <div className="empty-state">
+              Loading donation history...
+            </div>
+          ) : donations.length === 0 ? (
             <div className="empty-state">
               No donation history available.
             </div>
           ) : (
-
             <div className="table-container">
-
               <table>
 
                 <thead>
                   <tr>
                     <th>Date</th>
                     <th>Hospital</th>
-                    <th>Blood Group</th>
-                    <th>Units</th>
-                    <th>Status</th>
+                    <th>Units Donated</th>
                   </tr>
                 </thead>
 
                 <tbody>
-
                   {donations.map((donation) => (
-
-                    <tr
-                      key={
-                        donation.donation_id ||
-                        donation.id
-                      }
-                    >
+                    <tr key={donation.donationId}>
 
                       <td>
-                        {donation.donation_date}
+                        {donation.donationDate || "-"}
                       </td>
 
                       <td>
-                        {donation.hospital_name}
+                        {donation.hospitalName || "-"}
                       </td>
 
                       <td>
-                        {donation.blood_group}
-                      </td>
-
-                      <td>
-                        {donation.units}
-                      </td>
-
-                      <td>
-                        {donation.status}
+                        {donation.unitsDonated ?? 0}
                       </td>
 
                     </tr>
-
                   ))}
-
                 </tbody>
 
               </table>
-
             </div>
-
           )}
 
         </main>
-
       </div>
     </>
   );
