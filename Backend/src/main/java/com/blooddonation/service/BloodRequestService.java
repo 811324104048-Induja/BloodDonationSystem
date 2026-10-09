@@ -20,15 +20,18 @@ public class BloodRequestService {
     private final BloodRequestRepository repository;
     private final UserRepository userRepository;
     private final PatientRepository patientRepository;
+    private final MatchingService matchingService;
 
     public BloodRequestService(
             BloodRequestRepository repository,
             UserRepository userRepository,
-            PatientRepository patientRepository) {
+            PatientRepository patientRepository,
+            MatchingService matchingService) {
 
         this.repository = repository;
         this.userRepository = userRepository;
         this.patientRepository = patientRepository;
+        this.matchingService = matchingService;
     }
 
     // Get currently logged-in user
@@ -70,7 +73,6 @@ public class BloodRequestService {
         BloodRequest bloodRequest =
                 new BloodRequest();
 
-        // IMPORTANT:
         // Use patient_id, NOT user_id
         bloodRequest.setPatientId(
                 patient.getPatientId()
@@ -113,7 +115,16 @@ public class BloodRequestService {
                 request.getDescription()
         );
 
-        return repository.save(bloodRequest);
+        // First save the blood request
+        BloodRequest savedRequest =
+                repository.save(bloodRequest);
+
+        // Automatically generate donor matches
+        matchingService.generateMatches(
+                savedRequest.getRequestId()
+        );
+
+        return savedRequest;
     }
 
     // Get logged-in patient's requests
