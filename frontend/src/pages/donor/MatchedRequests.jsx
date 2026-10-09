@@ -1,53 +1,87 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import donorService from "../../services/donorService";
 import matchService from "../../services/matchService";
 
 const MatchedRequests = () => {
+
   const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     loadMatches();
   }, []);
 
+  // Load matches for logged-in donor
   const loadMatches = async () => {
     try {
-      const data =
-        await donorService.getMatchedRequests();
+      setLoading(true);
+      setError("");
 
-      setMatches(
-        data.matches || data || []
-      );
+      const data = await matchService.getMyMatches();
+
+      console.log("My matches:", data);
+
+      setMatches(Array.isArray(data) ? data : []);
 
     } catch (error) {
-      console.error(error);
+
+      console.error("Error loading matches:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Unable to load matching requests."
+      );
+
+    } finally {
+      setLoading(false);
     }
   };
 
-  const acceptMatch = async (id) => {
+  // Accept match
+  const acceptMatch = async (matchId) => {
+
     try {
-      await matchService.acceptMatch(id);
+
+      await matchService.acceptMatch(matchId);
+
+      alert("Match accepted successfully.");
+
+      // Reload matches after accepting
+      loadMatches();
+
+    } catch (error) {
+
+      console.error("Accept match error:", error);
 
       alert(
-        "Match accepted. The patient will be notified."
+        error.response?.data?.message ||
+        "Unable to accept match."
       );
-
-      loadMatches();
-
-    } catch (error) {
-      alert("Unable to accept match");
     }
   };
 
-  const rejectMatch = async (id) => {
-    try {
-      await matchService.rejectMatch(id);
+  // Reject match
+  const rejectMatch = async (matchId) => {
 
+    try {
+
+      await matchService.rejectMatch(matchId);
+
+      alert("Match rejected.");
+
+      // Reload matches after rejecting
       loadMatches();
 
     } catch (error) {
-      alert("Unable to reject match");
+
+      console.error("Reject match error:", error);
+
+      alert(
+        error.response?.data?.message ||
+        "Unable to reject match."
+      );
     }
   };
 
@@ -63,13 +97,33 @@ const MatchedRequests = () => {
 
           <h1>Matched Blood Requests</h1>
 
-          {matches.length === 0 ? (
+          <p>
+            Blood requests matched with your donor profile are shown below.
+          </p>
 
+          {/* Loading */}
+          {loading && (
             <div className="empty-state">
-              No matching requests found.
+              Loading matching requests...
             </div>
+          )}
 
-          ) : (
+          {/* Error */}
+          {!loading && error && (
+            <div className="empty-state">
+              {error}
+            </div>
+          )}
+
+          {/* No matches */}
+          {!loading && !error && matches.length === 0 && (
+            <div className="empty-state">
+              No matching blood requests found.
+            </div>
+          )}
+
+          {/* Matches */}
+          {!loading && !error && matches.length > 0 && (
 
             <div className="request-grid">
 
@@ -77,65 +131,102 @@ const MatchedRequests = () => {
 
                 <div
                   className="request-card"
-                  key={match.match_id || match.id}
+                  key={match.matchId}
                 >
 
-                  <span className="match-score">
+                  {/* Match Score */}
+                  <div className="match-score">
                     Match Score:{" "}
-                    {match.match_score || "-"}
-                  </span>
+                    <strong>
+                      {match.finalScore ?? "-"}
+                    </strong>
+                  </div>
 
+                  {/* Blood Group */}
                   <h2>
-                    🩸 {match.blood_group}
+                    🩸 {match.bloodGroup ?? "-"}
                   </h2>
 
+                  {/* Hospital */}
                   <p>
-                    📍 {match.city}
+                    🏥 <strong>Hospital:</strong>{" "}
+                    {match.hospitalName ?? "-"}
                   </p>
 
+                  {/* City */}
                   <p>
-                    🏥 {match.hospital_name}
+                    📍 <strong>City:</strong>{" "}
+                    {match.city ?? "-"}
                   </p>
 
+                  {/* Units */}
                   <p>
-                    Units:{" "}
-                    {match.units_required}
+                    🩸 <strong>Units Required:</strong>{" "}
+                    {match.unitsRequired ?? "-"}
                   </p>
 
+                  {/* Urgency */}
                   <p>
-                    Urgency:{" "}
-                    <strong>
-                      {match.urgency}
-                    </strong>
+                    🚨 <strong>Urgency:</strong>{" "}
+                    {match.urgency ?? "-"}
                   </p>
 
-                  <div className="button-group">
+                  {/* Compatibility */}
+                  <p>
+                    ✅ <strong>Compatibility Score:</strong>{" "}
+                    {match.compatibilityScore ?? "-"}
+                  </p>
 
-                    <button
-                      className="accept-btn"
-                      onClick={() =>
-                        acceptMatch(
-                          match.match_id ||
-                          match.id
-                        )
-                      }
-                    >
-                      Accept
-                    </button>
+                  {/* Availability */}
+                  <p>
+                    🟢 <strong>Availability Score:</strong>{" "}
+                    {match.availabilityScore ?? "-"}
+                  </p>
 
-                    <button
-                      className="reject-btn"
-                      onClick={() =>
-                        rejectMatch(
-                          match.match_id ||
-                          match.id
-                        )
-                      }
-                    >
-                      Reject
-                    </button>
+                  {/* Distance */}
+                  <p>
+                    📏 <strong>Distance:</strong>{" "}
+                    {match.distanceKm ?? 0} km
+                  </p>
 
-                  </div>
+                  {/* Match Reason */}
+                  <p>
+                    💡 <strong>Why you matched:</strong>{" "}
+                    {match.matchReason ?? "-"}
+                  </p>
+
+                  {/* Status */}
+                  <p>
+                    📌 <strong>Status:</strong>{" "}
+                    {match.status ?? "PENDING"}
+                  </p>
+
+                  {/* Buttons */}
+                  {match.status === "PENDING" && (
+
+                    <div className="button-group">
+
+                      <button
+                        className="accept-btn"
+                        onClick={() =>
+                          acceptMatch(match.matchId)
+                        }
+                      >
+                        Accept
+                      </button>
+
+                      <button
+                        className="reject-btn"
+                        onClick={() =>
+                          rejectMatch(match.matchId)
+                        }
+                      >
+                        Reject
+                      </button>
+
+                    </div>
+
+                  )}
 
                 </div>
 
