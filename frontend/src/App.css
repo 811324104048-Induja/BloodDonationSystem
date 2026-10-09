@@ -647,3 +647,731 @@ table button {
   }
 
 }
+/* ================================================= */
+/* BLOODCONNECT LANDING PAGE */
+/* ================================================= */
+
+.landing-page {
+  min-height: 100vh;
+  background: #fff;
+  color: #1f2937;
+}
+
+
+/* ============================= */
+/* LANDING NAVBAR */
+/* ============================= */
+
+.landing-navbar {
+  height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.landing-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #991b1b;
+  font-size: 25px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.blood-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: #b91c1c;
+  color: white;
+  border-radius: 50%;
+  font-size: 21px;
+}
+
+
+.landing-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing-login-btn,
+.landing-signup-btn {
+  padding: 10px 21px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.landing-login-btn {
+  background: white;
+  border: 1px solid #b91c1c;
+  color: #b91c1c;
+}
+
+.landing-login-btn:hover {
+  background: #fff1f2;
+}
+
+.landing-signup-btn {
+  border: 1px solid #b91c1c;
+  background: #b91c1c;
+  color: white;
+}
+
+.landing-signup-btn:hover {
+  background: #991b1b;
+  transform: translateY(-1px);
+}
+
+
+/* ============================= */
+/* HERO */
+/* ============================= */
+
+.landing-hero {
+  min-height: 620px;
+  padding: 70px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 85% 45%,
+      #fee2e2 0%,
+      #fff 35%
+    );
+}
+
+.hero-content {
+  width: 55%;
+  max-width: 650px;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 30px;
+  background: #fff1f2;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero-content h1 {
+  font-size: clamp(45px, 5vw, 70px);
+  line-height: 1.05;
+  margin-bottom: 25px;
+  color: #111827;
+  letter-spacing: -2px;
+}
+
+.hero-content h1 span {
+  color: #b91c1c;
+}
+
+.hero-content > p {
+  max-width: 580px;
+  color: #6b7280;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+
+/* ============================= */
+/* HERO BUTTONS */
+/* ============================= */
+
+.hero-buttons {
+  display: flex;
+  gap: 13px;
+  margin-bottom: 42px;
+}
+
+.hero-primary-btn,
+.hero-secondary-btn {
+  padding: 14px 23px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.hero-primary-btn {
+  border: none;
+  background: #b91c1c;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.hero-primary-btn span {
+  font-size: 20px;
+}
+
+.hero-primary-btn:hover {
+  background: #991b1b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(185, 28, 28, 0.2);
+}
+
+.hero-secondary-btn {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.hero-secondary-btn:hover {
+  border-color: #b91c1c;
+  color: #b91c1c;
+}
+
+
+/* ============================= */
+/* HERO STATS */
+/* ============================= */
+
+.hero-stats {
+  display: flex;
+  gap: 38px;
+}
+
+.hero-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-stats strong {
+  color: #111827;
+  font-size: 20px;
+}
+
+.hero-stats span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+
+/* ============================= */
+/* HERO VISUAL */
+/* ============================= */
+
+.hero-visual {
+  width: 42%;
+  min-height: 450px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glow-circle {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: #fee2e2;
+}
+
+.blood-drop {
+  position: relative;
+  width: 230px;
+  height: 290px;
+  background: #b91c1c;
+  border-radius: 55% 55% 60% 60%;
+  transform: rotate(45deg);
+  box-shadow:
+    0 25px 50px rgba(185, 28, 28, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blood-drop::before {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: #dc2626;
+  border-radius: 50%;
+  top: 25px;
+  left: 20px;
+}
+
+.drop-heart {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: 65px;
+  transform: rotate(-45deg);
+}
+
+
+/* ============================= */
+/* FLOATING CARDS */
+/* ============================= */
+
+.floating-card {
+  position: absolute;
+  z-index: 5;
+  background: white;
+  padding: 14px 17px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.floating-card > span {
+  font-size: 25px;
+}
+
+.floating-card div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.floating-card strong {
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.floating-card small {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.card-one {
+  left: 0;
+  top: 100px;
+}
+
+.card-two {
+  right: 0;
+  bottom: 95px;
+}
+
+
+/* ============================= */
+/* FEATURES */
+/* ============================= */
+
+.features-section {
+  padding: 85px 7%;
+  background: #fafafa;
+}
+
+.section-heading {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 50px;
+}
+
+.section-heading > span {
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.section-heading h2 {
+  font-size: 35px;
+  margin: 12px 0;
+  color: #111827;
+}
+
+.section-heading p {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+
+.features-grid {
+  max-width: 1150px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: white;
+  padding: 30px 25px;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  transition: 0.25s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.feature-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.donor-icon {
+  background: #fee2e2;
+}
+
+.patient-icon {
+  background: #fef3c7;
+}
+
+.match-icon {
+  background: #dcfce7;
+}
+
+.security-icon {
+  background: #dbeafe;
+}
+
+.feature-card h3 {
+  margin-bottom: 10px;
+  color: #1f2937;
+}
+
+.feature-card p {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+
+/* ============================= */
+/* CTA */
+/* ============================= */
+
+.landing-cta {
+  margin: 70px 7%;
+  padding: 45px 55px;
+  border-radius: 15px;
+  background: #b91c1c;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.landing-cta h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.landing-cta p {
+  color: #fecaca;
+  max-width: 650px;
+  line-height: 1.6;
+}
+
+.landing-cta button {
+  white-space: nowrap;
+  background: white;
+  color: #b91c1c;
+  border: none;
+  padding: 13px 23px;
+  border-radius: 7px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.landing-cta button:hover {
+  transform: translateY(-2px);
+}
+
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
+.landing-footer {
+  padding: 35px 7%;
+  background: #111827;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-logo {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.footer-logo span {
+  color: #ef4444;
+  margin-right: 7px;
+}
+
+.landing-footer p {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.footer-copy {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+
+/* ============================= */
+/* LANDING RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 1000px) {
+
+  .landing-hero {
+    padding-top: 55px;
+    padding-bottom: 55px;
+  }
+
+  .hero-visual {
+    width: 40%;
+  }
+
+  .blood-drop {
+    width: 180px;
+    height: 240px;
+  }
+
+  .glow-circle {
+    width: 300px;
+    height: 300px;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 750px) {
+
+  .landing-navbar {
+    padding: 0 25px;
+  }
+
+  .landing-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 55px 25px;
+  }
+
+  .hero-content {
+    width: 100%;
+  }
+
+  .hero-content > p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    width: 100%;
+    min-height: 390px;
+  }
+
+  .features-section {
+    padding: 60px 25px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-cta {
+    margin: 45px 25px;
+    padding: 35px 25px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .landing-footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .landing-logo {
+    font-size: 20px;
+  }
+
+  .landing-nav-buttons {
+    gap: 5px;
+  }
+
+  .landing-login-btn,
+  .landing-signup-btn {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+
+  .hero-content h1 {
+    font-size: 42px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-primary-btn,
+  .hero-secondary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-stats {
+    gap: 18px;
+  }
+
+  .hero-stats strong {
+    font-size: 17px;
+  }
+
+  .card-one {
+    left: 0;
+  }
+
+  .card-two {
+    right: 0;
+  }
+
+}
+/* ============================= */
+/* PASSWORD FIELD */
+/* ============================= */
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 48px;
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 20px;
+
+  padding: 4px;
+
+  line-height: 1;
+}
+
+.password-toggle:hover {
+  opacity: 0.7;
+}
+
+
+/* ============================= */
+/* PASSWORD REQUIREMENTS */
+/* ============================= */
+
+.password-requirements {
+  margin-top: 8px;
+  margin-bottom: 15px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  color: #666;
+}
+
+.password-requirements small:first-child {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 3px;
+}
+
+
+/* ============================= */
+/* OTP */
+/* ============================= */
+
+.otp-email {
+  display: block;
+  text-align: center;
+
+  color: #b91c1c;
+
+  margin: 8px 0 20px;
+
+  word-break: break-word;
+}
+
+.back-login-btn {
+  width: 100%;
+
+  margin-top: 15px;
+
+  padding: 11px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #b91c1c;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.back-login-btn:hover {
+  text-decoration: underline;
+}
