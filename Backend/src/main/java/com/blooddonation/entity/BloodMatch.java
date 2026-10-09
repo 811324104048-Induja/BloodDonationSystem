@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -69,6 +70,11 @@ private MatchStatus status = MatchStatus.PENDING;
         createdAt = now;
         updatedAt = now;
     }
+
+    @PreUpdate
+public void onUpdate() {
+    updatedAt = LocalDateTime.now();
+}
 
     public Integer getMatchId() {
         return matchId;
