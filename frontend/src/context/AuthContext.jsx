@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   }, []);
 
+  // STEP 1: Email + Password
   const login = async (email, password) => {
 
     const data = await authService.login({
@@ -39,9 +40,39 @@ export const AuthProvider = ({ children }) => {
       data
     );
 
+    // New OTP-based login
+    if (data && data.otpRequired) {
+      return data;
+    }
+
+    // Normal login fallback
     if (!data || !data.user) {
       throw new Error(
         "Invalid login response."
+      );
+    }
+
+    setUser(data.user);
+
+    return data;
+  };
+
+  // STEP 2: OTP verification
+  const verifyOtp = async (email, otp) => {
+
+    const data = await authService.verifyOtp({
+      email,
+      otp
+    });
+
+    console.log(
+      "AuthContext OTP response:",
+      data
+    );
+
+    if (!data || !data.token || !data.user) {
+      throw new Error(
+        "Invalid OTP verification response."
       );
     }
 
@@ -71,6 +102,7 @@ export const AuthProvider = ({ children }) => {
         user,
         setUser,
         login,
+        verifyOtp,
         signup,
         logout,
         loading
