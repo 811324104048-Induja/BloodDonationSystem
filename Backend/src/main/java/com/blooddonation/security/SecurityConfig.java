@@ -97,9 +97,11 @@ public class SecurityConfig {
                     ).permitAll()
 
                     // Login and signup
-                    .requestMatchers(
-                            "/api/auth/**"
-                    ).permitAll()
+                   .requestMatchers(
+    "/api/auth/login",
+    "/api/auth/signup",
+    "/api/auth/verify-otp"
+).permitAll()
 
                     // Everything else requires JWT
                     .anyRequest().authenticated()
