@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import matchService from "../../services/matchService";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import "./MyRequests.css";
 
 const MyRequests = () => {
-
   const navigate = useNavigate();
 
   const [requests, setRequests] = useState([]);
@@ -14,96 +14,144 @@ const MyRequests = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let active = true;
 
     const fetchRequests = async () => {
-
       try {
+        setLoading(true);
+        setError("");
 
         const response = await api.get(
           "/blood-requests/my-requests"
         );
 
-        setRequests(response.data);
+        const requestList = Array.isArray(response.data)
+          ? response.data
+          : [];
 
-      } catch (error) {
+        // Get match statuses for every blood request.
+        const updatedRequests = await Promise.all(
+          requestList.map(async (request) => {
+            try {
+              const matchResponse =
+                await matchService.getMatchesForRequest(
+                  request.requestId
+                );
 
+              const matches = Array.isArray(matchResponse)
+                ? matchResponse
+                : Array.isArray(matchResponse?.matches)
+                ? matchResponse.matches
+                : [];
+
+              const statuses = matches.map((match) =>
+                String(match.status || "").toUpperCase()
+              );
+
+              let displayStatus = request.status;
+
+              // If at least one donor accepts, show ACCEPTED.
+              if (statuses.includes("ACCEPTED")) {
+                displayStatus = "ACCEPTED";
+              }
+              // Show REJECTED only when all matched donors rejected.
+              else if (
+                statuses.length > 0 &&
+                statuses.every(
+                  (status) => status === "REJECTED"
+                )
+              ) {
+                displayStatus = "REJECTED";
+              }
+
+              return {
+                ...request,
+                displayStatus,
+              };
+            } catch (matchError) {
+              console.error(
+                `Failed to fetch matches for request ${request.requestId}:`,
+                matchError
+              );
+
+              // Preserve the original status if matches cannot load.
+              return {
+                ...request,
+                displayStatus: request.status,
+              };
+            }
+          })
+        );
+
+        if (active) {
+          setRequests(updatedRequests);
+        }
+      } catch (fetchError) {
         console.error(
           "Failed to fetch requests:",
-          error
+          fetchError
         );
 
-        setError(
-          error.response?.data?.message ||
-          "Failed to load blood requests."
-        );
-
+        if (active) {
+          setError(
+            fetchError.response?.data?.message ||
+              "Failed to load blood requests."
+          );
+        }
       } finally {
-
-        setLoading(false);
-
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
     fetchRequests();
 
+    return () => {
+      active = false;
+    };
   }, []);
 
-  /* =========================
-     LOADING
-  ========================= */
+  const getStatusClass = (status) => {
+    return String(status || "PENDING")
+      .toLowerCase()
+      .replaceAll(" ", "_");
+  };
 
   if (loading) {
-
     return (
       <>
         <Navbar />
 
         <div className="layout">
-
           <Sidebar />
 
           <main className="main-content">
-
             <div className="requests-loading">
               Loading requests...
             </div>
-
           </main>
-
         </div>
       </>
     );
-
   }
-
-  /* =========================
-     MAIN PAGE
-  ========================= */
 
   return (
     <>
       <Navbar />
 
       <div className="layout">
-
         <Sidebar />
 
         <main className="main-content">
-
           {/* PAGE HEADER */}
-
           <div className="page-header">
-
             <div>
-
-              <h1>
-                📋 My Blood Requests
-              </h1>
+              <h1>📋 My Blood Requests</h1>
 
               <p>
                 Track and manage your blood requests.
               </p>
-
             </div>
 
             <button
@@ -113,38 +161,21 @@ const MyRequests = () => {
             >
               + New Request
             </button>
-
           </div>
 
-
-          {/* =========================
-              ERROR
-          ========================= */}
-
+          {/* ERROR */}
           {error && (
-
             <div className="error-message">
               {error}
             </div>
-
           )}
 
-
-          {/* =========================
-              NO REQUESTS
-          ========================= */}
-
+          {/* NO REQUESTS */}
           {!error && requests.length === 0 ? (
-
             <div className="empty-state">
+              <div className="empty-icon">🩸</div>
 
-              <div className="empty-icon">
-                🩸
-              </div>
-
-              <h2>
-                No Blood Requests Yet
-              </h2>
+              <h2>No Blood Requests Yet</h2>
 
               <p>
                 You haven't created any blood requests.
@@ -158,89 +189,71 @@ const MyRequests = () => {
               >
                 + Create Blood Request
               </button>
-
             </div>
-
           ) : (
-
-            /* =========================
-               REQUEST LIST
-            ========================= */
-
+            /* REQUEST LIST */
             <div className="request-list">
+              {requests.map((request) => {
+                const status =
+                  request.displayStatus ||
+                  request.status ||
+                  "PENDING";
 
-              {requests.map((request) => (
+                return (
+                  <div
+                    className="request-card"
+                    key={request.requestId}
+                  >
+                    {/* LEFT SIDE */}
+                    <div>
+                      <h3>
+                        🩸 {request.bloodGroup}
+                      </h3>
 
-                <div
-                  className="request-card"
-                  key={request.requestId}
-                >
+                      <p>
+                        🏥 {request.hospitalName}
+                      </p>
 
-                  {/* LEFT SIDE */}
+                      <p>
+                        📍 {request.city}
+                      </p>
 
-                  <div>
+                      <p>
+                        🩸 Units Required:{" "}
+                        {request.unitsRequired}
+                      </p>
+                    </div>
 
-                    <h3>
-                      🩸 {request.bloodGroup}
-                    </h3>
+                    {/* RIGHT SIDE */}
+                    <div>
+                      <span
+                        className={`status ${getStatusClass(
+                          status
+                        )}`}
+                      >
+                        {status}
+                      </span>
 
-                    <p>
-                      🏥 {request.hospitalName}
-                    </p>
+                      <p>
+                        🚨 Urgency: {request.urgency}
+                      </p>
 
-                    <p>
-                      📍 {request.city}
-                    </p>
-
-                    <p>
-                      🩸 Units Required:{" "}
-                      {request.unitsRequired}
-                    </p>
-
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/patient/requests/${request.requestId}`
+                          )
+                        }
+                      >
+                        View Details →
+                      </button>
+                    </div>
                   </div>
-
-
-                  {/* RIGHT SIDE */}
-
-                  <div>
-
-                    <span
-                      className={`status ${
-                        request.status
-                          ?.toLowerCase()
-                          .replaceAll(" ", "_")
-                      }`}
-                    >
-                      {request.status}
-                    </span>
-
-                    <p>
-                      🚨 Urgency:{" "}
-                      {request.urgency}
-                    </p>
-
-                    <button
-                      onClick={() =>
-                        navigate(
-                          `/patient/requests/${request.requestId}`
-                        )
-                      }
-                    >
-                      View Details →
-                    </button>
-
-                  </div>
-
-                </div>
-
-              ))}
-
+                );
+              })}
             </div>
-
           )}
-
         </main>
-
       </div>
     </>
   );
