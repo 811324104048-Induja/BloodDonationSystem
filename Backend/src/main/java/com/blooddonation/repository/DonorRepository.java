@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.blooddonation.entity.BloodGroup;
 import com.blooddonation.entity.Donor;
 
-public interface DonorRepository
-        extends JpaRepository<Donor, Integer> {
+public interface DonorRepository extends JpaRepository<Donor, Integer> {
 
     Optional<Donor> findByUser_UserId(Integer userId);
 
@@ -21,6 +20,8 @@ public interface DonorRepository
     List<Donor> findByBloodGroupAndAvailableTrue(
             BloodGroup bloodGroup
     );
+
+    List<Donor> findByAvailableTrue();
 
     long countByAvailableTrue();
 }
