@@ -11,7 +11,7 @@ Healthcare / Blood Donation / Emergency Response
 ## 3. Who is the user?
 
 The platform has three main user types:
-
+ 
 - **Donor** – registers blood group, location, availability, and donation-related details, and can respond to blood requests.
 - **Patient / Requester** – creates blood requests by specifying blood group, units required, hospital, location, and urgency.
 - **Admin** – manages users and requests, monitors emergency cases, verifies reported misuse, and controls access to sensitive information.
