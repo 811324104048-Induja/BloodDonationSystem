@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blooddonation.dto.AuthResponse;
 import com.blooddonation.dto.LoginRequest;
+import com.blooddonation.dto.OtpRequest;
 import com.blooddonation.dto.SignupRequest;
 import com.blooddonation.entity.User;
 import com.blooddonation.service.AuthService;
@@ -26,6 +27,10 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // =========================
+    // SIGNUP
+    // =========================
+
     @PostMapping("/signup")
     public ResponseEntity<?> signup(
             @Valid @RequestBody SignupRequest request) {
@@ -35,10 +40,10 @@ public class AuthController {
             Map<String, Object> result =
                     authService.signup(request);
 
-            User user = (User) result.get("user");
+            User user =
+                    (User) result.get("user");
 
             AuthResponse.UserResponse userResponse =
-            
                     new AuthResponse.UserResponse(
                             user.getUserId(),
                             user.getName(),
@@ -57,26 +62,74 @@ public class AuthController {
 
         } catch (RuntimeException e) {
 
-            return ResponseEntity.badRequest().body(
-                    Map.of(
-                            "message",
-                            e.getMessage()
-                    )
-            );
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            Map.of(
+                                    "message",
+                                    e.getMessage()
+                            )
+                    );
         }
     }
 
+    // =========================
+    // LOGIN - STEP 1
+    // EMAIL + PASSWORD
+    // =========================
+
     @PostMapping("/login")
     public ResponseEntity<?> login(
-
             @Valid @RequestBody LoginRequest request) {
 
         try {
 
+            /*
+             * Password is verified here.
+             *
+             * If correct:
+             * OTP is sent.
+             *
+             * JWT is NOT returned yet.
+             */
+
             Map<String, Object> result =
                     authService.login(request);
 
-            User user = (User) result.get("user");
+            return ResponseEntity.ok(result);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            Map.of(
+                                    "message",
+                                    e.getMessage()
+                            )
+                    );
+        }
+    }
+
+    // =========================
+    // LOGIN - STEP 2
+    // VERIFY OTP
+    // =========================
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(
+            @Valid @RequestBody OtpRequest request) {
+
+        try {
+
+            Map<String, Object> result =
+                    authService.verifyOtp(
+                            request.getEmail(),
+                            request.getOtp()
+                    );
+
+            User user =
+                    (User) result.get("user");
 
             AuthResponse.UserResponse userResponse =
                     new AuthResponse.UserResponse(
@@ -97,12 +150,14 @@ public class AuthController {
 
         } catch (RuntimeException e) {
 
-            return ResponseEntity.badRequest().body(
-                    Map.of(
-                            "message",
-                            e.getMessage()
-                    )
-            );
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            Map.of(
+                                    "message",
+                                    e.getMessage()
+                            )
+                    );
         }
     }
 }
