@@ -7,8 +7,11 @@ C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\controller\PatientController.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\AuthResponse.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\BloodRequestRequest.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\DonorMatchResponse.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\DonorProfileRequest.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\LoginRequest.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\MatchedDonorResponse.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\OtpRequest.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\PatientProfileRequest.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\PatientRequestProfile.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\dto\SignupRequest.java
@@ -18,12 +21,14 @@ C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\entity\DonationHistory.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\entity\Donor.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\entity\MatchStatus.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\entity\OtpVerification.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\entity\Patient.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\entity\User.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\BloodMatchRepository.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\BloodRequestRepository.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\DonationHistoryRepository.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\DonorRepository.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\OtpVerificationRepository.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\PatientRepository.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\repository\UserRepository.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\security\JwtAuthenticationFilter.java
@@ -34,5 +39,7 @@ C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\DonationHistoryService.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\DonationService.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\DonorService.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\EmailService.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\MatchingService.java
+C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\OtpService.java
 C:\Users\manoj\CEO\BloodDonationPlatform\Backend\src\main\java\com\blooddonation\service\PatientService.java
