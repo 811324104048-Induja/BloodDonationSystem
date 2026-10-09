@@ -9,9 +9,9 @@ import { AuthProvider } from "./context/AuthContext";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Signup from "./pages/Signup";
-
+import LandingPage from "./pages/LandingPage";
 import DonorDashboard from "./pages/donor/DonorDashboard";
 import DonorProfile from "./pages/donor/DonorProfile";
 import EditDonorProfile from "./pages/donor/EditDonorProfile";
@@ -236,15 +236,10 @@ function App() {
 
           {/* DEFAULT */}
 
-          <Route
-            path="/"
-            element={
-              <Navigate
-                to="/login"
-                replace
-              />
-            }
-          />
+         <Route
+  path="/"
+  element={<LandingPage />}
+/>
 
           <Route
             path="*"
